@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import cartopy.feature as cfeature
 import cartopy.crs as ccrs
+from datetime import *
 import pandas as pd
 import numpy as np
 import math
@@ -52,6 +53,22 @@ def get_distance(coords):
     return distance
 
 
+def get_displacement(pos_vector):
+    min_time = ""
+    max_time = ""
+
+    for index, row in pos_vector.iterrows():
+        if min_time == "":
+            min_time = row
+        else:
+            if row["PosTime"] < min_time["PosTime"]:
+                min_time = row
+        if max_time == "":
+            max_time = row
+        else:
+            if row["PosTime"] > max_time["PosTime"]:
+                max_time = row
+
 
 
 
@@ -87,6 +104,7 @@ if __name__ == "__main__":
         # print(pos_vector_df)
         if in_bounds(pos_vector_df, b_box):
             # pos_vector_df = filter_pos_vector_df(pos_vector_df, b_box)
+            pos_vector["PosTime"] = pd.to_datetime(pos_vector.PosTime)
             long, lat = pos_vector_df["Long"], pos_vector_df["Lat"]
             longArr = long.to_numpy()
             latArr = lat.to_numpy()
